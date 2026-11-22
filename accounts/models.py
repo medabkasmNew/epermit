@@ -73,7 +73,7 @@ class User(AbstractUser):
         HARSCO = 'harsco', 'Harsco'
         TRANSPORTATION = 'transportation', 'Transportation'
         CEAW = 'ceaw', 'CEAW'
-        general_services = 'general_services', 'General Services'
+        GENERALE_SERVICES = 'general_services', 'General Services'
         OTHER = 'other', 'Other'    
     username = None  # removed, the badge number is the login
 
@@ -83,7 +83,7 @@ class User(AbstractUser):
         validators=[RegexValidator(r"^\d{5}$", "Badge number must be exactly 5 digits.")],
     )
     # first_name, last_name, email, password come from AbstractUser
-    department = models.CharField(max_length=100)
+    department = models.CharField(max_length=30, choices=Department.choices)
     phone_number = models.CharField(max_length=20)
     role = models.CharField(max_length=20, choices=Role.choices, default=Role.OPERATOR)
 
