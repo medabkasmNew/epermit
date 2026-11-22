@@ -73,7 +73,7 @@ class User(AbstractUser):
         HARSCO = 'harsco', 'Harsco'
         TRANSPORTATION = 'transportation', 'Transportation'
         CEAW = 'ceaw', 'CEAW'
-        MOYEN_GENERAUX = 'general_services', 'General Services'
+        general_services = 'general_services', 'General Services'
         OTHER = 'other', 'Other'    
     username = None  # removed, the badge number is the login
 
