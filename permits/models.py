@@ -45,7 +45,7 @@ class EPermit(models.Model):
 
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.PENDING)
     epermit_type = models.JSONField(default=list, blank=True)  # e.g. ["work_at_height", "cold_work"]
-
+    other_precautions = models.JSONField(default=list, blank=True)  # free-text items, duplicates allowed
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
