@@ -1,28 +1,36 @@
+from django import forms
 from django.contrib import admin
 
-from .models import ColdWork, EPermit, WorkAtHeight
+from .models import EPermit, PermitType
 
 
-class WorkAtHeightInline(admin.TabularInline):
-    model = WorkAtHeight
-    extra = 0
+class EPermitAdminForm(forms.ModelForm):
+    epermit_type = forms.MultipleChoiceField(
+        choices=PermitType.choices,
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+    )
 
-
-class ColdWorkInline(admin.TabularInline):
-    model = ColdWork
-    extra = 0
+    class Meta:
+        model = EPermit
+        fields = "__all__"
 
 
 @admin.register(EPermit)
 class EPermitAdmin(admin.ModelAdmin):
+    form = EPermitAdminForm
     list_display = (
         "permit_number", "work_area", "status", "requester",
-        "hse_supervisor", "start_expected", "end_expected", "epermit_type",
+        "hse_supervisor", "start_expected", "end_expected", "types_display",
     )
     list_filter = ("status",)
     search_fields = ("permit_number", "work_area", "requester__badge_number")
-    readonly_fields = ("permit_number", "requester", "epermit_type", "created_at", "updated_at")
-    inlines = [WorkAtHeightInline, ColdWorkInline]
+    readonly_fields = ("permit_number", "requester", "created_at", "updated_at")
+
+    @admin.display(description="Types")
+    def types_display(self, obj):
+        labels = dict(PermitType.choices)
+        return ", ".join(labels.get(t, t) for t in obj.epermit_type) or "-"
 
     def save_model(self, request, obj, form, change):
         if not change:

@@ -3,6 +3,12 @@ from django.db import models, transaction
 from django.utils import timezone
 
 
+class PermitType(models.TextChoices):
+    """Predefined options for EPermit.epermit_type. Add one line per new type."""
+    WORK_AT_HEIGHT = "work_at_height", "Work at height"
+    COLD_WORK = "cold_work", "Cold work"
+
+
 class EPermit(models.Model):
     class Status(models.TextChoices):
         PENDING = "pending"
@@ -32,7 +38,7 @@ class EPermit(models.Model):
     )
 
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.PENDING)
-    epermit_type = models.JSONField(default=list, blank=True)
+    epermit_type = models.JSONField(default=list, blank=True)  # e.g. ["work_at_height", "cold_work"]
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -52,24 +58,5 @@ class EPermit(models.Model):
                 self.permit_number = f"EP-{timezone.now():%Y}-{self.pk:06d}"
                 super().save(update_fields=["permit_number"])
 
-    @property
-    def types(self):
-        """One-to-many: all rows from all type tables linked to this permit."""
-        from itertools import chain
-        return list(chain(
-            self.workatheight_set.all(),
-            self.coldwork_set.all(),
-        ))
-
     def __str__(self):
         return self.permit_number or f"EPermit {self.pk}"
-
-
-class WorkAtHeight(models.Model):
-    epermit = models.ForeignKey(EPermit, on_delete=models.CASCADE)
-    applicable = models.BooleanField(default=True)
-
-
-class ColdWork(models.Model):
-    epermit = models.ForeignKey(EPermit, on_delete=models.CASCADE)
-    applicable = models.BooleanField(default=True)

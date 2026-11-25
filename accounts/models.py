@@ -80,7 +80,7 @@ class User(AbstractUser):
     badge_number = models.CharField(
         max_length=5,
         unique=True,
-        validators=[RegexValidator(r"^\d{5}$", "Badge number must be exactly 5 digits.")],
+        validators=[RegexValidator(r"^\d{4}$", "Badge number must be exactly 4 digits.")],
     )
     # first_name, last_name, email, password come from AbstractUser
     department = models.CharField(max_length=30, choices=Department.choices)
