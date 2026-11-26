@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.db import models, transaction
 from django.utils import timezone
-
-from .constants import PermitStatus,PermitType
+from .constants import PermitStatus
+from accounts.constants import Department
 from .validators import validate_free_text_list, validate_permit_types
 
 
@@ -11,7 +11,7 @@ class EPermit(models.Model):
     permit_number = models.CharField(max_length=20, unique=True, null=True, blank=True, editable=False)
     start_expected = models.DateTimeField()
     end_expected = models.DateTimeField()
-    work_area = models.CharField(max_length=255)
+    work_area = models.CharField(max_length=255,choices=Department.choices,default=Department.OTHER)
     job_description = models.TextField()
 
     requester = models.ForeignKey(
