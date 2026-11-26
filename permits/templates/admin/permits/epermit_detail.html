@@ -1,0 +1,68 @@
+{% extends "admin/base_site.html" %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+  <a href="{% url 'admin:index' %}">Home</a> &rsaquo;
+  <a href="{% url 'admin:permits_epermit_changelist' %}">Epermits</a> &rsaquo;
+  {{ original.permit_number }}
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+
+  <ul class="object-tools">
+    <li><a href="{% url 'admin:permits_epermit_change' original.pk %}" class="changelink">Edit</a></li>
+  </ul>
+
+  <div class="module aligned">
+    <h2>Permit information</h2>
+    <div class="form-row"><label>Permit number:</label> <strong>{{ original.permit_number }}</strong></div>
+    <div class="form-row"><label>Status:</label> {{ original.get_status_display }}</div>
+    <div class="form-row"><label>Start of work expected:</label> {{ original.start_expected }}</div>
+    <div class="form-row"><label>End of work expected:</label> {{ original.end_expected }}</div>
+    <div class="form-row"><label>Work area:</label> {{ original.work_area }}</div>
+    <div class="form-row"><label>Job description:</label> {{ original.job_description|linebreaksbr }}</div>
+  </div>
+
+  <div class="module aligned">
+    <h2>People</h2>
+    <div class="form-row">
+      <label>Requester:</label>
+      {{ original.requester.badge_number }} - {{ original.requester.get_full_name }}
+      ({{ original.requester.get_department_display }}, {{ original.requester.get_role_display }})
+      {% if original.requester.phone_number %} - {{ original.requester.phone_number }}{% endif %}
+    </div>
+    <div class="form-row">
+      <label>HSE supervisor:</label>
+      {% if original.hse_supervisor %}
+        {{ original.hse_supervisor.badge_number }} - {{ original.hse_supervisor.get_full_name }}
+        ({{ original.hse_supervisor.get_department_display }})
+      {% else %}-{% endif %}
+    </div>
+  </div>
+
+  <div class="module aligned">
+    <h2>Permit types</h2>
+    <div class="form-row">
+      {% for label in type_labels %}{{ label }}{% if not forloop.last %}, {% endif %}{% empty %}-{% endfor %}
+    </div>
+  </div>
+
+  <div class="module aligned">
+    <h2>Other precautions</h2>
+    <div class="form-row">
+      <ol>
+        {% for item in original.other_precautions %}<li>{{ item }}</li>{% empty %}<li>-</li>{% endfor %}
+      </ol>
+    </div>
+  </div>
+
+  <div class="module aligned">
+    <h2>Record</h2>
+    <div class="form-row"><label>Created at:</label> {{ original.created_at }}</div>
+    <div class="form-row"><label>Updated at:</label> {{ original.updated_at }}</div>
+  </div>
+
+</div>
+{% endblock %}
