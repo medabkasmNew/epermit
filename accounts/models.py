@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.core.validators import RegexValidator
 from django.db import models
 from .constants import Role,Department
+from .validators import validate_algerian_phone
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
@@ -37,7 +38,7 @@ class User(AbstractUser):
     )
     # first_name, last_name, email, password come from AbstractUser
     department = models.CharField(max_length=30, choices=Department.choices)
-    phone_number = models.CharField(max_length=20)
+    phone_number = models.CharField(max_length=10, validators=[validate_algerian_phone])
     role = models.CharField(max_length=20, choices=Role.choices, default=Role.OPERATOR)
 
     USERNAME_FIELD = "badge_number"
