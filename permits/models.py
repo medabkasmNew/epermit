@@ -2,27 +2,11 @@ from django.conf import settings
 from django.db import models, transaction
 from django.utils import timezone
 
-
-class PermitType(models.TextChoices):
-    """Predefined work permit types."""
-
-    WORK_AT_HEIGHT = "work_at_height", "Work at height"
-    COLD_WORK = "cold_work", "Cold work"
-    HOT_WORK = "hot_work", "Hot work"
-    CONFINED_SPACE_ENTRY = "confined_space_entry", "Confined space entry"
-    ELECTRICAL_WORK = "electrical_work", "Electrical work"
-    EXCAVATION_WORK = "excavation_work", "Excavation work"
-    LIFTING_OPERATION = "lifting_operation", "Lifting operation"
+from .constants import PermitStatus,PermitType
+from .validators import validate_free_text_list, validate_permit_types
 
 
 class EPermit(models.Model):
-    class Status(models.TextChoices):
-        PENDING = "pending"
-        APPROVED = "approved"
-        CLOSED = "closed"
-        REJECTED = "rejected"
-        PAUSED = "paused"
-
     # Section 01 - Permit Information
     permit_number = models.CharField(max_length=20, unique=True, null=True, blank=True, editable=False)
     start_expected = models.DateTimeField()
@@ -43,9 +27,18 @@ class EPermit(models.Model):
         related_name="epermits_supervised",
     )
 
-    status = models.CharField(max_length=10, choices=Status.choices, default=Status.PENDING)
-    epermit_type = models.JSONField(default=list, blank=True)  # e.g. ["work_at_height", "cold_work"]
-    other_precautions = models.JSONField(default=list, blank=True)  # free-text items, duplicates allowed
+    status = models.CharField(max_length=10, choices=PermitStatus.choices, default=PermitStatus.PENDING)
+    epermit_type = models.JSONField(
+        default=list,
+        blank=True,
+        validators=[validate_permit_types],
+    )  # e.g. ["work_at_height", "cold_work"]
+    other_precautions = models.JSONField(
+        default=list,
+        blank=True,
+        validators=[validate_free_text_list],
+    )  # free-text items, duplicates allowed
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

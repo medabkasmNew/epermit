@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib import admin
 
-from .models import EPermit, PermitType
+from .constants import PermitType
+from .models import EPermit
 
 
 class EPermitAdminForm(forms.ModelForm):
@@ -10,19 +11,7 @@ class EPermitAdminForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple,
         required=False,
     )
-    other_precautions = forms.CharField(
-        widget=forms.Textarea(attrs={"rows": 5}),
-        required=False,
-        help_text="One precaution per line.",
-    )
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if self.instance.pk:
-            self.initial["other_precautions"] = "\n".join(self.instance.other_precautions)
-    def clean_other_precautions(self):
-        text = self.cleaned_data.get("other_precautions", "")
-        return [line.strip() for line in text.splitlines() if line.strip()]
-		
+
     class Meta:
         model = EPermit
         fields = "__all__"
