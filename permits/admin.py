@@ -2,6 +2,7 @@ from django import forms
 from django.contrib import admin
 
 from .constants import PermitType
+from .forms import FreeTextListField
 from .models import EPermit
 
 
@@ -11,6 +12,7 @@ class EPermitAdminForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple,
         required=False,
     )
+    other_precautions = FreeTextListField(required=False)
 
     class Meta:
         model = EPermit
