@@ -1,6 +1,6 @@
 from django.core.exceptions import ValidationError
 
-from .constants import PermitType
+from .constants import PermitType , MandatoryPPE
 
 MAX_ITEM_LENGTH = 50
 
@@ -30,3 +30,10 @@ def validate_permit_types(value):
 
     if len(value) != len(set(value)):
         raise ValidationError("A permit type can only appear once.")
+
+def validate_mandatory_ppe(value):
+    """mandatory_ppe: free-text list rules, and all mandatory options must be present."""
+    validate_free_text_list(value)
+    missing = [label for code, label in MandatoryPPE.choices if code not in value]
+    if missing:
+        raise ValidationError("Missing mandatory PPE: " + ", ".join(missing) + ".")

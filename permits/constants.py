@@ -18,3 +18,21 @@ class PermitStatus(models.TextChoices):
     CLOSED = "closed", "Closed"
     REJECTED = "rejected", "Rejected"
     PAUSED = "paused", "Paused"
+
+
+class MandatoryPPE(models.TextChoices):
+    """Always required on site. Must all be present in EPermit.mandatory_ppe."""
+    SAFETY_HELMET = "safety_helmet", "Safety helmet"
+    SAFETY_SHOES = "safety_shoes", "Safety shoes"
+    SAFETY_GLASSES = "safety_glasses", "Safety glasses"
+    SAFETY_VEST = "safety_vest", "Safety vest"
+    HEARING_PROTECTION = "hearing_protection", "Hearing protection"
+
+
+class AdditionalPPE(models.TextChoices):
+    """Offered as checkboxes. The user ticks the ones the job needs."""
+    LIFE_JACKET = "life_jacket", "Life jacket"
+    SAFETY_HARNESS = "safety_harness", "Safety harness"
+    GLOVES = "gloves", "Gloves"
+    MASKS = "masks", "Masks"
+    FACE_PROTECTION_VISOR = "face_protection_visor", "Face protection visor"
