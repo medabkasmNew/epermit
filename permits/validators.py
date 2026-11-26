@@ -37,3 +37,16 @@ def validate_mandatory_ppe(value):
     missing = [label for code, label in MandatoryPPE.choices if code not in value]
     if missing:
         raise ValidationError("Missing mandatory PPE: " + ", ".join(missing) + ".")
+
+def validate_additional_certificates(value):
+    """additional_certificates: a list of predefined options, each at most once. Empty is allowed."""
+    if not isinstance(value, list):
+        raise ValidationError("Must be a list of certificates.")
+
+    allowed = set(AdditionalCertificate.values)
+    for item in value:
+        if item not in allowed:
+            raise ValidationError(f"'{item}' is not a valid certificate.")
+
+    if len(value) != len(set(value)):
+        raise ValidationError("A certificate can only appear once.")

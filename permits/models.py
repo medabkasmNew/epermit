@@ -3,7 +3,12 @@ from django.db import models, transaction
 from django.utils import timezone
 from .constants import PermitStatus
 from accounts.constants import Department
-from .validators import validate_free_text_list, validate_permit_types , validate_mandatory_ppe
+from .validators import (
+    validate_additional_certificates,
+    validate_free_text_list,
+    validate_mandatory_ppe,
+    validate_permit_types,
+)
 
 
 class EPermit(models.Model):
@@ -36,6 +41,12 @@ class EPermit(models.Model):
         blank=True,
         validators=[validate_free_text_list],
     )  # ticked option codes + free-text extras, may be empty
+
+    additional_certificates = models.JSONField(
+        default=list,
+        blank=True,
+        validators=[validate_additional_certificates],
+    )  # e.g. ["work_at_height", "x_ray_work"]; [] means none required
 
     status = models.CharField(max_length=10, choices=PermitStatus.choices, default=PermitStatus.PENDING)
     epermit_type = models.JSONField(

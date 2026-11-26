@@ -36,3 +36,10 @@ class AdditionalPPE(models.TextChoices):
     GLOVES = "gloves", "Gloves"
     MASKS = "masks", "Masks"
     FACE_PROTECTION_VISOR = "face_protection_visor", "Face protection visor"
+
+class AdditionalCertificate(models.TextChoices):
+    """Certificates of additional work required."""
+    WORK_AT_HEIGHT = "work_at_height", "Work at height"
+    CONFINED_SPACE = "confined_space", "Confined space"
+    ELECTRICAL_WORK = "electrical_work", "Travaux électriques"
+    X_RAY_WORK = "x_ray_work", "X-Ray work"
